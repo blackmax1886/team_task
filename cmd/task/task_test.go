@@ -7,8 +7,8 @@ import (
 
 func TestGetTask(t *testing.T) {
 	//task := task.Task{"test_name", "test_content"}
-	output := task.GetTask()
-	if output != "" {
+	output := task.GetTask("name", "content")
+	if output != "name : content" {
 		t.Errorf("error")
 	}
 
