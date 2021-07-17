@@ -6,5 +6,5 @@ package task
 //}
 
 func GetTask() string {
-	return "a"
+	return ""
 }
