@@ -1,15 +1,17 @@
 package task_test
 
 import (
+	"fmt"
 	"team_task/cmd/task"
 	"testing"
 )
 
 func TestGetTask(t *testing.T) {
-	//task := task.Task{"test_name", "test_content"}
-	output := task.GetTask("name", "content")
-	if output != "name : content" {
+	sample_task := task.Task{"sample_name", "sample_content"}
+	//output := task.GetTask("name", "content")
+	output := task.GetTask(sample_task)
+	want := fmt.Sprintf(`%v : %v`, sample_task.Name, sample_task.Content)
+	if output != want {
 		t.Errorf("error")
 	}
-
 }

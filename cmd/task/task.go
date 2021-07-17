@@ -2,11 +2,11 @@ package task
 
 import "fmt"
 
-//type Task struct {
-//	name string
-//	content string
-//}
+type Task struct {
+	Name    string
+	Content string
+}
 
-func GetTask(name string, content string) string {
-	return fmt.Sprintf(`%v : %v`, name, content)
+func GetTask(task Task) string {
+	return fmt.Sprintf(`%v : %v`, task.Name, task.Content)
 }
