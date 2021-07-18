@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"os"
 	"team_task/cmd/task"
 	"testing"
 )
@@ -19,14 +20,18 @@ func TestGetTask(t *testing.T) {
 }
 
 func TestAddTask(t *testing.T) {
-	//	ToDo: 標準入力→受け取った内容をチェック
 	var sampleTask = task.Task{}
 	// create temp file for sample Task data
 	input, err := ioutil.TempFile("", "")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer input.Close()
+	defer func(input *os.File) {
+		err := input.Close()
+		if err != nil {
+
+		}
+	}(input)
 
 	// write sample Task data to temp
 	_, err = io.WriteString(input, "codetest"+" "+"create AddTask function and test it\n")
@@ -34,7 +39,7 @@ func TestAddTask(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// fileの最初を原点にwhence=0, offset=0から次のReadWriteを返す
+	// 書き込んだ直後なのでReaderがEOFを次に読もうとするので、ファイルの先頭に戻す
 	_, err = input.Seek(0, 0)
 	if err != nil {
 		t.Fatal(err)
