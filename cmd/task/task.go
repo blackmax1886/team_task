@@ -10,3 +10,7 @@ type Task struct {
 func GetTask(task Task) string {
 	return fmt.Sprintf(`%v : %v`, task.Name, task.Content)
 }
+
+func AddTask() string {
+	return ""
+}

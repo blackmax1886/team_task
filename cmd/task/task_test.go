@@ -15,3 +15,11 @@ func TestGetTask(t *testing.T) {
 		t.Errorf("error")
 	}
 }
+
+func TestAddTask(t *testing.T) {
+	//	ToDo: 標準入力→受け取った内容をチェック
+	output := task.AddTask()
+	if output != "1" {
+		t.Errorf(`unexpected value error : %v, expected 1`, output)
+	}
+}
