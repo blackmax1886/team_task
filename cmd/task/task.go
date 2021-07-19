@@ -22,19 +22,13 @@ func AddTask(input *os.File) Task {
 
 	reader := csv.NewReader(input)
 	var task Task
-	fmt.Println("Enter the name of your task\nname =")
+	fmt.Println("Enter the name of your task\nname,content =")
 	record, err := reader.Read()
 	if err != nil {
 		panic(err)
 	}
 	task.Name = record[0]
 	task.Content = record[1]
-	//fmt.Println("Enter the name & content of your task\ncontent =")
-	//
-	//_, err = fmt.Fscanln(input, "%s",&task.Content)
-	//if err != nil {
-	//	panic(err)
-	//}
 
 	return task
 }
