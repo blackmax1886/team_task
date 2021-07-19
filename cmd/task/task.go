@@ -1,6 +1,7 @@
 package task
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 )
@@ -19,12 +20,22 @@ func AddTask(input *os.File) Task {
 		input = os.Stdin
 	}
 
-	var name, content string
-	fmt.Println("Enter the name & content of your task\nname content =")
-	_, err := fmt.Fscanf(input, "%s %s", &name, &content)
+	reader := csv.NewReader(input)
+	var task Task
+	fmt.Println("Enter the name of your task\nname =")
+	record, err := reader.Read()
+	//_, err := fmt.Fscanf(reader, "%s,%s", &task.Name,&task.Content)
 	if err != nil {
 		panic(err)
 	}
+	task.Name = record[0]
+	task.Content = record[1]
+	//fmt.Println("Enter the name & content of your task\ncontent =")
+	//
+	//_, err = fmt.Fscanln(input, "%s",&task.Content)
+	//if err != nil {
+	//	panic(err)
+	//}
 
-	return Task{Name: name, Content: content}
+	return task
 }

@@ -34,7 +34,7 @@ func TestAddTask(t *testing.T) {
 	}(input)
 
 	// write sample Task data to temp
-	_, err = io.WriteString(input, "codetest"+" "+"create AddTask function and test it\n")
+	_, err = io.WriteString(input, "codetest,"+"create AddTask function and test it\n")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func TestAddTask(t *testing.T) {
 	}
 
 	sampleTask = task.AddTask(input)
-	if sampleTask.Name != "codetest" && sampleTask.Content != "create AddTask function and test it" {
+	if sampleTask.Name != "codetest" || sampleTask.Content != "create AddTask function and test it" {
 		t.Errorf(`unexpected value error: {Name:%v, Content:%v}`, sampleTask.Name, sampleTask.Content)
 	}
 }
