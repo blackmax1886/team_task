@@ -1,8 +1,8 @@
 package task_test
 
 import (
+	"encoding/csv"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"team_task/cmd/task"
@@ -34,10 +34,14 @@ func TestAddTask(t *testing.T) {
 	}(input)
 
 	// write sample Task data to temp
-	_, err = io.WriteString(input, "codetest,"+"create AddTask function and test it\n")
+	writer := csv.NewWriter(input)
+	err = writer.Write([]string{"codetest", "create AddTask function and test it"})
+	//_, err = io.WriteString(input, "codetest,"+"create AddTask function and test it\n")
 	if err != nil {
 		t.Fatal(err)
 	}
+	// バッファに残っているデータをすべて書き込む
+	writer.Flush()
 
 	// 書き込んだ直後なのでReaderがEOFを次に読もうとするので、ファイルの先頭に戻す
 	_, err = input.Seek(0, 0)

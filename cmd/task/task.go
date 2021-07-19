@@ -24,7 +24,6 @@ func AddTask(input *os.File) Task {
 	var task Task
 	fmt.Println("Enter the name of your task\nname =")
 	record, err := reader.Read()
-	//_, err := fmt.Fscanf(reader, "%s,%s", &task.Name,&task.Content)
 	if err != nil {
 		panic(err)
 	}
