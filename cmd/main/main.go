@@ -1,8 +1,10 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"os"
 )
 
@@ -34,6 +36,12 @@ func AddTask(input *os.File) (Task, error) {
 }
 
 func main() {
+	db, err := sql.Open("mysql", "taskgo:teamtask@tcp(192.168.100.1:3306)/teamtask")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
 	task, err := AddTask(nil)
 	if err != nil {
 		panic(err)
