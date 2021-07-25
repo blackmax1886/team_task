@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 	"os"
 )
 
@@ -14,7 +15,7 @@ type Task struct {
 	Content string
 }
 
-func AddTask(input *os.File) (Task, error) {
+func AddTask(input *os.File, db *sql.DB) (sql.Result, error) {
 	var task Task
 
 	if input == nil {
@@ -29,22 +30,32 @@ func AddTask(input *os.File) (Task, error) {
 
 	err = json.Unmarshal(buf[:n], &task)
 	if err != nil {
-		return Task{}, err
+		return nil, err
 	}
 
-	return task, nil
+	ins, err := db.Prepare("INSERT INTO task (name, content) VALUES(?,?)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	result, err := ins.Exec(task.Name, task.Content)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return result, nil
 }
 
 func main() {
-	db, err := sql.Open("mysql", "taskgo:teamtask@tcp(192.168.100.1:3306)/teamtask")
+	db, err := sql.Open("mysql", "taskgo:teamtask@tcp(127.0.0.1:3306)/teamtask")
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
 
-	task, err := AddTask(nil)
+	r, err := AddTask(nil, db)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(task.Id, task.Name, task.Content)
+	//fmt.Println(task.Id, task.Name, task.Content)
+	fmt.Println(r)
 }
