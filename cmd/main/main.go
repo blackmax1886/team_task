@@ -15,6 +15,29 @@ type Task struct {
 	Content string
 }
 
+func main() {
+	db, err := sql.Open("mysql", "taskgo:teamtask@tcp(127.0.0.1:3306)/teamtask")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	r, err := AddTask(nil, db)
+	if err != nil {
+		panic(err)
+	}
+	//fmt.Println(task.Id, task.Name, task.Content)
+	fmt.Println(r)
+
+	tasks, err := GetTask(3, db)
+	if err != nil {
+		panic(err)
+	}
+	for _, task := range tasks {
+		fmt.Println(task.Id, task.Name, task.Content)
+	}
+}
+
 func AddTask(input *os.File, db *sql.DB) (sql.Result, error) {
 	var task Task
 
@@ -45,17 +68,27 @@ func AddTask(input *os.File, db *sql.DB) (sql.Result, error) {
 	return result, nil
 }
 
-func main() {
-	db, err := sql.Open("mysql", "taskgo:teamtask@tcp(127.0.0.1:3306)/teamtask")
+func GetTask(limit int, db *sql.DB) ([]*Task, error) {
+	const query = "SELECT * FROM task ORDER BY id DESC LIMIT ?"
+	rows, err := db.Query(query, limit)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	defer db.Close()
+	defer rows.Close()
 
-	r, err := AddTask(nil, db)
-	if err != nil {
-		panic(err)
+	var tasks []*Task
+	for rows.Next() {
+		var task Task
+		err := rows.Scan(&task.Id, &task.Name, &task.Content)
+		if err != nil {
+			return nil, err
+		}
+		tasks = append(tasks, &task)
 	}
-	//fmt.Println(task.Id, task.Name, task.Content)
-	fmt.Println(r)
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
 }
