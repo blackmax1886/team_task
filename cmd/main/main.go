@@ -18,37 +18,32 @@ type Task struct {
 func main() {
 	db, err := sql.Open("mysql", "taskgo:teamtask@tcp(127.0.0.1:3306)/teamtask")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer db.Close()
 
 	r, err := AddTask(nil, db)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	//fmt.Println(task.Id, task.Name, task.Content)
 	fmt.Println(r)
 
 	tasks, err := GetTask(3, db)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	for _, task := range tasks {
-		fmt.Println(task.Id, task.Name, task.Content)
-	}
+	ShowTasks(tasks)
+	os.Exit(1)
 }
 
 func AddTask(input *os.File, db *sql.DB) (sql.Result, error) {
 	var task Task
 
-	if input == nil {
-		input = os.Stdin
-	}
-
 	buf := make([]byte, 1024)
 	n, err := input.Read(buf)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	err = json.Unmarshal(buf[:n], &task)
@@ -91,4 +86,10 @@ func GetTask(limit int, db *sql.DB) ([]*Task, error) {
 	}
 
 	return tasks, nil
+}
+
+func ShowTasks(tasks []*Task) {
+	for _, task := range tasks {
+		fmt.Println(task.Id, task.Name, task.Content)
+	}
 }
