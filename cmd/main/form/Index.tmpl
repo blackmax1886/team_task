@@ -1,0 +1,31 @@
+{{ define "Index" }}
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>golang_template</title>
+</head>
+<body>
+<h2> Registered </h2>
+<table>
+    <thead>
+    <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Content</td>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range . }}
+    <tr>
+        <td>{{ .Id }}</td>
+        <td> {{ .Name }} </td>
+        <td>{{ .Content }} </td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
+</body>
+</html>
+{{ end }}
