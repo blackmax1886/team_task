@@ -15,14 +15,27 @@ type Task struct {
 	Content string
 }
 
+func dbConn() (db *sql.DB, err error) {
+	dbDriver := "mysql"
+	dbUser := "taskgo"
+	dbPass := "teamtask"
+	dbName := "teamtask"
+	dbHost := "127.0.0.1:3306"
+	db, err = sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbHost+")/"+dbName)
+	if err != nil {
+		return nil, err
+	}
+	return db, err
+}
+
 func main() {
-	db, err := sql.Open("mysql", "taskgo:teamtask@tcp(127.0.0.1:3306)/teamtask")
+	db, err := dbConn()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	r, err := AddTask(nil, db)
+	r, err := AddTask(os.Stdin, db)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,6 +76,7 @@ func AddTask(input *os.File, db *sql.DB) (sql.Result, error) {
 	return result, nil
 }
 
+// get recent tasks
 func GetTask(limit int, db *sql.DB) ([]*Task, error) {
 	const query = "SELECT * FROM task ORDER BY id DESC LIMIT ?"
 	rows, err := db.Query(query, limit)
