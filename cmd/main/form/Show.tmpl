@@ -1,14 +1,7 @@
 {{ define "Show" }}
-    <!DOCTYPE html>
-    <html lang='en'>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <title>golang_template</title>
-    </head>
-    <body>
-    <h2> Register {{ .Id }} </h2>
-    <p>Name: {{ .Name }}</p>
-    <p>Content: {{ .Content }}</p><br/> <a href="/edit?id={{ .Id }}">Edit</a></p>
-    </body>
-{{ end }}
+    {{ template "Header" }}
+        <h2> task {{ .Id }} </h2>
+        <p>Name: {{ .Name }}</p>
+        <p>Content: {{ .Content }}</p><br/> <a href="/edit?id={{ .Id }}">Edit</a></p>
+    {{template "Footer"}}
+{{end}}
