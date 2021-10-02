@@ -84,10 +84,59 @@ func Show(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 }
 
+func Edit(w http.ResponseWriter, r *http.Request) {
+	db, err := dbConn()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	nId := r.URL.Query().Get("id")
+	selDB, err := db.Query("SELECT * FROM Task WHERE  id=?", nId)
+	if err != nil {
+		panic(err.Error())
+	}
+	task := Task{}
+	for selDB.Next() {
+		var id int
+		var name, content string
+		err = selDB.Scan(&id, &name, &content)
+		if err != nil {
+			panic(err.Error())
+		}
+		task.Id = id
+		task.Name = name
+		task.Content = content
+	}
+	tmpl.ExecuteTemplate(w, "Edit", task)
+	defer db.Close()
+}
+
+func Update(w http.ResponseWriter, r *http.Request) {
+	db, err := dbConn()
+	if err != nil {
+		panic(err.Error())
+	}
+	if r.Method == "POST" {
+		name := r.FormValue("name")
+		content := r.FormValue("content")
+		id := r.FormValue("taskid")
+		insForm, err := db.Prepare("UPDATE Task SET name=?, content=? WHERE id=?")
+		if err != nil {
+			panic(err.Error())
+		}
+		insForm.Exec(name, content, id)
+		log.Println("UPDATE: Name: " + name + " | Content: " + content)
+	}
+	defer db.Close()
+	http.Redirect(w, r, "/", 301)
+}
+
 func main() {
 	log.Println("Server started on: http://localhost:8080")
 	http.HandleFunc("/", Index)
 	http.HandleFunc("/show", Show)
+	http.HandleFunc("/edit", Edit)
+	http.HandleFunc("/update", Update)
 	http.ListenAndServe(":8080", nil)
 
 	//r, err := AddTask(os.Stdin, db)

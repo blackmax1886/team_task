@@ -1,0 +1,11 @@
+{{ define "Edit" }}
+    {{ template "Header" }}
+    <h2>Edit Name and Content</h2>
+    <form method="POST" action="update">
+        <input type="hidden" name="taskid" value="{{ .Id }}" />
+        <label> Name </label><input type="text" name="name" value="{{ .Name }}"  /><br />
+        <label> Content </label><input type="text" name="content" value="{{ .Content }}"  /><br />
+        <input type="submit" value="Save task" />
+    </form><br />
+    {{ template "Footer" }}
+{{ end }}
