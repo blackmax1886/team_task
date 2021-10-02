@@ -1,0 +1,10 @@
+{{define "New"}}
+    {{template "Header"}}
+        <h2>New task</h2>
+        <form method="post" action="insert">
+            <label> Name </label><input type="text" name="name" /></br>
+            <label> Content </label><input type="text" name="content" /></br>
+            <input type="submit" value="Add" />
+        </form>
+    {{template "Footer"}}
+{{end}}

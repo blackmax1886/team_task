@@ -84,6 +84,30 @@ func Show(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 }
 
+func New(w http.ResponseWriter, r *http.Request) {
+	tmpl.ExecuteTemplate(w, "New", nil)
+}
+
+func Insert(w http.ResponseWriter, r *http.Request) {
+	db, err := dbConn()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	if r.Method == "POST" {
+		name := r.FormValue("name")
+		content := r.FormValue("content")
+		insForm, err := db.Prepare("INSERT INTO Task(name, content) VALUES(?,?)")
+		if err != nil {
+			panic(err.Error())
+		}
+		insForm.Exec(name, content)
+		log.Println("INSERT: Name: " + name + " | Content: " + content)
+	}
+	defer db.Close()
+	http.Redirect(w, r, "/", 301)
+}
+
 func Edit(w http.ResponseWriter, r *http.Request) {
 	db, err := dbConn()
 	if err != nil {
@@ -135,6 +159,8 @@ func main() {
 	log.Println("Server started on: http://localhost:8080")
 	http.HandleFunc("/", Index)
 	http.HandleFunc("/show", Show)
+	http.HandleFunc("/new", New)
+	http.HandleFunc("/insert", Insert)
 	http.HandleFunc("/edit", Edit)
 	http.HandleFunc("/update", Update)
 	http.ListenAndServe(":8080", nil)
