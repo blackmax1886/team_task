@@ -155,6 +155,22 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 301)
 }
 
+func Delete(w http.ResponseWriter, r *http.Request) {
+	db, err := dbConn()
+	if err != nil {
+		panic(err.Error())
+	}
+	nId := r.URL.Query().Get("id")
+	delForm, err := db.Prepare("DELETE FROM Task WHERE id=?")
+	if err != nil {
+		panic(err.Error())
+	}
+	delForm.Exec(nId)
+	log.Println("DELETE")
+	defer db.Close()
+	http.Redirect(w, r, "/", 301)
+}
+
 func main() {
 	log.Println("Server started on: http://localhost:8080")
 	http.HandleFunc("/", Index)
@@ -163,6 +179,7 @@ func main() {
 	http.HandleFunc("/insert", Insert)
 	http.HandleFunc("/edit", Edit)
 	http.HandleFunc("/update", Update)
+	http.HandleFunc("/delete", Delete)
 	http.ListenAndServe(":8080", nil)
 
 	//r, err := AddTask(os.Stdin, db)
