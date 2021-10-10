@@ -35,16 +35,16 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	selDB, err := db.Query("SELECT * FROM task ORDER BY id DESC")
+	rows, err := db.Query("SELECT * FROM task ORDER BY id DESC")
 	if err != nil {
 		panic(err.Error())
 	}
 	task := Task{}
 	res := []Task{}
-	for selDB.Next() {
+	for rows.Next() {
 		var id int
 		var name, content string
-		err = selDB.Scan(&id, &name, &content)
+		err = rows.Scan(&id, &name, &content)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -64,15 +64,15 @@ func Show(w http.ResponseWriter, r *http.Request) {
 	}
 
 	nId := r.URL.Query().Get("id")
-	selDB, err := db.Query("SELECT * FROM Task WHERE id=?", nId)
+	rows, err := db.Query("SELECT * FROM Task WHERE id=?", nId)
 	if err != nil {
 		panic(err.Error())
 	}
 	task := Task{}
-	for selDB.Next() {
+	for rows.Next() {
 		var id int
 		var name, content string
-		err = selDB.Scan(&id, &name, &content)
+		err = rows.Scan(&id, &name, &content)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -115,15 +115,15 @@ func Edit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	nId := r.URL.Query().Get("id")
-	selDB, err := db.Query("SELECT * FROM Task WHERE  id=?", nId)
+	rows, err := db.Query("SELECT * FROM Task WHERE  id=?", nId)
 	if err != nil {
 		panic(err.Error())
 	}
 	task := Task{}
-	for selDB.Next() {
+	for rows.Next() {
 		var id int
 		var name, content string
-		err = selDB.Scan(&id, &name, &content)
+		err = rows.Scan(&id, &name, &content)
 		if err != nil {
 			panic(err.Error())
 		}
